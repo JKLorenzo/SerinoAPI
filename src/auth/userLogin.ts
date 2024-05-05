@@ -12,7 +12,7 @@ export default function userLogin(email: string, password: string) {
   if (password !== user.password) throw "Password is incorrect.";
 
   // Generate token
-  const token = jwt.sign({ id: user.id }, JWTSecret);
+  const token = jwt.sign(String(user.id), JWTSecret);
 
   // Add token to database
   db.prepare("INSERT INTO ACCESS_TOKENS (user_id, token) VALUES (?, ?)").run(
