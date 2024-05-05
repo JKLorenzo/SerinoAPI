@@ -1,5 +1,5 @@
 export default interface Treasure {
-  treasure_id: number;
+  id: number;
   name: string;
   latitude: number;
   longitude: number;

@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import currentUser from "./currentUser.js";
+import { db } from "../db/database.js";
 import jwt from "jsonwebtoken";
 import { JWTSecret } from "../main.js";
+import User from "../models/user.js";
+import userVerify from "./userVerify.js";
 
 export function middleware(
   req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
@@ -15,12 +17,9 @@ export function middleware(
   if (!token) return res.sendStatus(401);
 
   try {
-    const userId = jwt.verify(token, JWTSecret);
-    if (typeof userId !== "string") throw "Invalid token.";
-    const user = currentUser(token);
-
-    if (Number(userId) === user.id) next();
-    else res.sendStatus(403);
+    const user = userVerify(token);
+    if (user) next();
+    else res.sendStatus(500);
   } catch (e) {
     res.status(401).send(e);
   }

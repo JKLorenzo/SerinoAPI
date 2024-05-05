@@ -4,7 +4,7 @@ import { initDb } from "./db/database.js";
 import getNearbyTreasures from "./functions/getNearbyTreasures.js";
 import userLogin from "./auth/userLogin.js";
 import userLogout from "./auth/userLogout.js";
-import currentUser from "./auth/currentUser.js";
+import userVerify from "./auth/userVerify.js";
 
 export const PORT = 3000;
 export const JWTSecret = "this_is_a_secret";
@@ -37,7 +37,7 @@ app.post("/logout", middleware, (req, res) => {
 
 app.get("/user", middleware, (req, res) => {
   const token = req.headers.authorization?.split(" ")[1]!;
-  const user = currentUser(token);
+  const user = userVerify(token);
   res.json({ id: user.id, name: user.name, age: user.age, email: user.email });
 });
 
