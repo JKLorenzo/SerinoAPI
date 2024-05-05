@@ -25,7 +25,7 @@ app.post("/login", (req, res) => {
     const token = userLogin(email, password);
     res.json({ token });
   } catch (e) {
-    res.status(400).send(e);
+    S400.send(e);
   }
 });
 
