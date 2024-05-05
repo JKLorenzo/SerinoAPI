@@ -1,0 +1,29 @@
+{
+  "name": "lanz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/main.js",
+  "type": "module",
+  "scripts": {
+    "setup": "npm ci",
+    "build": "tsc",
+    "clean": "rimraf build",
+    "start": "node ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/express": "^4.17.21",
+    "@types/geolib": "^2.0.23",
+    "@types/jsonwebtoken": "^9.0.6",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.6.0",
+    "express": "^4.19.2",
+    "geolib": "^3.3.4",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
