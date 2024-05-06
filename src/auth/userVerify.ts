@@ -7,7 +7,7 @@ export default function userVerify(token: string) {
   const userId = jwt.verify(token, JWTSecret);
   if (typeof userId !== "string") throw "Invalid token.";
 
-  const user = db.prepare("SELECT * FROM USERS WHERE id = ?").get(userId) as
+  const user = db.prepare("SELECT * FROM USERS WHERE id = ?;").get(userId) as
     | User
     | undefined;
   if (typeof user === "undefined") throw "User does not exist.";

@@ -1,10 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
-import { db } from "../db/database.js";
-import jwt from "jsonwebtoken";
-import { JWTSecret } from "../main.js";
-import User from "../models/user.js";
 import userVerify from "./userVerify.js";
 
 export function middleware(

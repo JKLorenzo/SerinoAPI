@@ -9,10 +9,18 @@ export default function getNearbyTreasures(
   distance: 1 | 10,
   prize_value: number | undefined
 ) {
-  // Filter money_values based on prize_value
-  const money_values = db
-    .prepare("SELECT * FROM MONEY_VALUES WHERE amount >= ?;")
-    .all(prize_value ?? 0) as MoneyValue[];
+  let money_values: MoneyValue[] = [];
+  if (prize_value) {
+    // Get all money_values with an amount greater than or equal to prize_value
+    money_values = db
+      .prepare("SELECT * FROM MONEY_VALUES WHERE amount >= ?;")
+      .all(prize_value) as MoneyValue[];
+  } else {
+    // Get all money_values
+    money_values = db
+      .prepare("SELECT * FROM MONEY_VALUES;")
+      .all() as MoneyValue[];
+  }
 
   // Filter money_values based on treasure_id with their corresponding minimum amount
   const money_values_map = new Map<number, number>();
@@ -27,27 +35,27 @@ export default function getNearbyTreasures(
   }
 
   // Get corresponding treasures based on treasure values
-  const treasures = [...money_values_map.entries()].map((money_value) => {
-    const [treasure_id, amount] = money_value;
+  const treasures = [...money_values_map.entries()].map(
+    ([treasure_id, amount]) => {
+      // Get treasure based on treasure_id
+      const treasure = db
+        .prepare("SELECT * FROM TREASURES WHERE id = ?")
+        .get(treasure_id) as Treasure;
 
-    // Get treasure based on treasure_id
-    const treasure = db
-      .prepare("SELECT * FROM TREASURES WHERE id = ?")
-      .get(treasure_id) as Treasure;
+      // Calculate distance (in KM) of each treasure from the latlng parameter
+      const distance =
+        getDistance(
+          { lat, lng },
+          { lat: treasure.latitude, lng: treasure.longitude }
+        ) / 1000;
 
-    // Calculate distance (in KM) of each treasure from the latlng parameter
-    const distance =
-      getDistance(
-        { lat, lng },
-        { lat: treasure.latitude, lng: treasure.longitude }
-      ) / 1000;
-
-    return {
-      ...treasure,
-      amount,
-      distance,
-    };
-  });
+      return {
+        ...treasure,
+        amount,
+        distance,
+      };
+    }
+  );
 
   return (
     treasures
